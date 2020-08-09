@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "creativeparty",
+  "version": "${version}",
+  "name": "Creative Party",
+  "description": "A calm and fun creative game mode to chill in.",
+  "authors": [
+    "SuperCoder79"
+  ],
+  "contact": {},
+  "license": "LGPLv3",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "supercoder79.creativeparty.CreativeParty"
+    ]
+  },
+  "mixins": [
+    "creativeparty.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.9.1+build.205",
+    "fabric": "*",
+    "minecraft": "1.16.1"
+  }
+}
