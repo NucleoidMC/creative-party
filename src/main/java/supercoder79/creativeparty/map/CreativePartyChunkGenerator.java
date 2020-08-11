@@ -1,6 +1,6 @@
 package supercoder79.creativeparty.map;
 
-import net.gegy1000.plasmid.game.world.generator.GameChunkGenerator;
+import xyz.nucleoid.plasmid.game.world.generator.GameChunkGenerator;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

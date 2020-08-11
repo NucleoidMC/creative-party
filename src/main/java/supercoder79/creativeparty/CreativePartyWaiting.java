@@ -2,20 +2,21 @@ package supercoder79.creativeparty;
 
 import java.util.concurrent.CompletableFuture;
 
-import net.gegy1000.plasmid.game.GameWorld;
-import net.gegy1000.plasmid.game.GameWorldState;
-import net.gegy1000.plasmid.game.StartResult;
-import net.gegy1000.plasmid.game.event.OfferPlayerListener;
-import net.gegy1000.plasmid.game.event.PlayerAddListener;
-import net.gegy1000.plasmid.game.event.PlayerDeathListener;
-import net.gegy1000.plasmid.game.event.RequestStartListener;
-import net.gegy1000.plasmid.game.player.JoinResult;
-import net.gegy1000.plasmid.game.rule.GameRule;
-import net.gegy1000.plasmid.game.rule.RuleResult;
+import xyz.nucleoid.plasmid.game.GameWorld;
+import xyz.nucleoid.plasmid.game.StartResult;
+import xyz.nucleoid.plasmid.game.event.OfferPlayerListener;
+import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
+import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
+import xyz.nucleoid.plasmid.game.event.RequestStartListener;
+import xyz.nucleoid.plasmid.game.player.JoinResult;
+import xyz.nucleoid.plasmid.game.rule.GameRule;
+import xyz.nucleoid.plasmid.game.rule.RuleResult;
 import supercoder79.creativeparty.map.CreativePartyMap;
 import supercoder79.creativeparty.map.CreativePartyMapGenerator;
+import xyz.nucleoid.plasmid.game.world.bubble.BubbleWorldConfig;
 
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.GameMode;
@@ -32,11 +33,15 @@ public class CreativePartyWaiting {
 		this.config = config;
 	}
 
-	public static CompletableFuture<Void> open(GameWorldState worldState, CreativePartyConfig config) {
+	public static CompletableFuture<Void> open(MinecraftServer server, CreativePartyConfig config) {
 		CreativePartyMapGenerator generator = new CreativePartyMapGenerator();
 
 		return generator.create().thenAccept(map -> {
-			GameWorld gameWorld = worldState.openWorld(map.chunkGenerator());
+			BubbleWorldConfig worldConfig = new BubbleWorldConfig()
+					.setGenerator(map.chunkGenerator())
+					.setDefaultGameMode(GameMode.SPECTATOR);
+
+			GameWorld gameWorld = GameWorld.open(server, worldConfig);
 
 			CreativePartyWaiting waiting = new CreativePartyWaiting(gameWorld, map, config);
 
