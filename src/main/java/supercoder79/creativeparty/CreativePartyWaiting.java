@@ -2,6 +2,7 @@ package supercoder79.creativeparty;
 
 import java.util.concurrent.CompletableFuture;
 
+import xyz.nucleoid.plasmid.game.GameOpenContext;
 import xyz.nucleoid.plasmid.game.GameWorld;
 import xyz.nucleoid.plasmid.game.StartResult;
 import xyz.nucleoid.plasmid.game.event.OfferPlayerListener;
@@ -19,6 +20,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.Heightmap;
 
@@ -33,24 +35,24 @@ public class CreativePartyWaiting {
 		this.config = config;
 	}
 
-	public static CompletableFuture<Void> open(MinecraftServer server, CreativePartyConfig config) {
+	public static CompletableFuture<Void> open(GameOpenContext<CreativePartyConfig> context) {
 		CreativePartyMapGenerator generator = new CreativePartyMapGenerator();
 
 		return generator.create().thenAccept(map -> {
 			BubbleWorldConfig worldConfig = new BubbleWorldConfig()
-					.setGenerator(map.chunkGenerator())
+					.setGenerator(map.chunkGenerator(context.getServer()))
 					.setDefaultGameMode(GameMode.SPECTATOR);
 
-			GameWorld gameWorld = GameWorld.open(server, worldConfig);
+			GameWorld gameWorld = context.openWorld(worldConfig);
 
-			CreativePartyWaiting waiting = new CreativePartyWaiting(gameWorld, map, config);
+			CreativePartyWaiting waiting = new CreativePartyWaiting(gameWorld, map, context.getConfig());
 
-			gameWorld.newGame(game -> {
-				game.setRule(GameRule.ALLOW_CRAFTING, RuleResult.DENY);
-				game.setRule(GameRule.ALLOW_PORTALS, RuleResult.DENY);
-				game.setRule(GameRule.ALLOW_PVP, RuleResult.DENY);
+			gameWorld.openGame(game -> {
+				game.setRule(GameRule.CRAFTING, RuleResult.DENY);
+				game.setRule(GameRule.PORTALS, RuleResult.DENY);
+				game.setRule(GameRule.PVP, RuleResult.DENY);
 				game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
-				game.setRule(GameRule.ENABLE_HUNGER, RuleResult.DENY);
+				game.setRule(GameRule.HUNGER, RuleResult.DENY);
 
 				game.on(RequestStartListener.EVENT, waiting::requestStart);
 				game.on(OfferPlayerListener.EVENT, waiting::offerPlayer);
@@ -83,9 +85,9 @@ public class CreativePartyWaiting {
 		this.spawnPlayer(player);
 	}
 
-	private boolean onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
+	private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
 		this.spawnPlayer(player);
-		return true;
+		return ActionResult.FAIL;
 	}
 
 	private void spawnPlayer(ServerPlayerEntity player) {

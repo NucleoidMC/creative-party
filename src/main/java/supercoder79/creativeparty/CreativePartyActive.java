@@ -43,13 +43,13 @@ public class CreativePartyActive {
 
 		CreativePartyActive active = new CreativePartyActive(gameWorld, map, config, participants);
 
-		gameWorld.newGame(game -> {
-			game.setRule(GameRule.ALLOW_CRAFTING, RuleResult.DENY);
-			game.setRule(GameRule.ALLOW_PORTALS, RuleResult.DENY);
-			game.setRule(GameRule.ALLOW_PVP, RuleResult.DENY);
+		gameWorld.openGame(game -> {
+			game.setRule(GameRule.CRAFTING, RuleResult.DENY);
+			game.setRule(GameRule.PORTALS, RuleResult.DENY);
+			game.setRule(GameRule.PVP, RuleResult.DENY);
 			game.setRule(GameRule.BLOCK_DROPS, RuleResult.DENY);
 			game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
-			game.setRule(GameRule.ENABLE_HUNGER, RuleResult.DENY);
+			game.setRule(GameRule.HUNGER, RuleResult.DENY);
 
 			game.on(GameOpenListener.EVENT, active::onOpen);
 

@@ -25,9 +25,9 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation 'xyz.nucleoid:plasmid:0.1.0+build.43'
+    modImplementation 'xyz.nucleoid:plasmid:0.1.0+build.72'
 
-    modRuntime ("com.github.SuperCoder7979:databreaker:0.2.5") {
+    modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
         exclude module : "fabric-loader"
     }
 

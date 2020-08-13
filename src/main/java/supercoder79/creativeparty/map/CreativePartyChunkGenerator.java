@@ -4,6 +4,7 @@ import xyz.nucleoid.plasmid.game.world.generator.GameChunkGenerator;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkRegion;
@@ -15,6 +16,11 @@ import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.StructureAccessor;
 
 public class CreativePartyChunkGenerator extends GameChunkGenerator {
+
+	public CreativePartyChunkGenerator(MinecraftServer server) {
+		super(server);
+	}
+
 	private static final BlockState STONE = Blocks.STONE.getDefaultState();
 	private static final BlockState WATER = Blocks.WATER.getDefaultState();
 
