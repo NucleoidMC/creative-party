@@ -14,7 +14,7 @@ import xyz.nucleoid.plasmid.game.rule.GameRule;
 import xyz.nucleoid.plasmid.game.rule.RuleResult;
 import supercoder79.creativeparty.map.CreativePartyMap;
 import supercoder79.creativeparty.map.CreativePartyMapGenerator;
-import xyz.nucleoid.plasmid.game.world.bubble.BubbleWorldConfig;
+import xyz.nucleoid.plasmid.world.bubble.BubbleWorldConfig;
 
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.MinecraftServer;
@@ -35,30 +35,31 @@ public class CreativePartyWaiting {
 		this.config = config;
 	}
 
-	public static CompletableFuture<Void> open(GameOpenContext<CreativePartyConfig> context) {
+	public static CompletableFuture<GameWorld> open(GameOpenContext<CreativePartyConfig> context) {
 		CreativePartyMapGenerator generator = new CreativePartyMapGenerator();
 
-		return generator.create().thenAccept(map -> {
+		return generator.create().thenCompose(map -> {
 			BubbleWorldConfig worldConfig = new BubbleWorldConfig()
 					.setGenerator(map.chunkGenerator(context.getServer()))
 					.setDefaultGameMode(GameMode.SPECTATOR);
 
-			GameWorld gameWorld = context.openWorld(worldConfig);
+			return context.openWorld(worldConfig).thenApply(gameWorld -> {
+				CreativePartyWaiting waiting = new CreativePartyWaiting(gameWorld, map, context.getConfig());
 
-			CreativePartyWaiting waiting = new CreativePartyWaiting(gameWorld, map, context.getConfig());
+				gameWorld.openGame(game -> {
+					game.setRule(GameRule.CRAFTING, RuleResult.DENY);
+					game.setRule(GameRule.PORTALS, RuleResult.DENY);
+					game.setRule(GameRule.PVP, RuleResult.DENY);
+					game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
+					game.setRule(GameRule.HUNGER, RuleResult.DENY);
 
-			gameWorld.openGame(game -> {
-				game.setRule(GameRule.CRAFTING, RuleResult.DENY);
-				game.setRule(GameRule.PORTALS, RuleResult.DENY);
-				game.setRule(GameRule.PVP, RuleResult.DENY);
-				game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
-				game.setRule(GameRule.HUNGER, RuleResult.DENY);
+					game.on(RequestStartListener.EVENT, waiting::requestStart);
+					game.on(OfferPlayerListener.EVENT, waiting::offerPlayer);
 
-				game.on(RequestStartListener.EVENT, waiting::requestStart);
-				game.on(OfferPlayerListener.EVENT, waiting::offerPlayer);
-
-				game.on(PlayerAddListener.EVENT, waiting::addPlayer);
-				game.on(PlayerDeathListener.EVENT, waiting::onPlayerDeath);
+					game.on(PlayerAddListener.EVENT, waiting::addPlayer);
+					game.on(PlayerDeathListener.EVENT, waiting::onPlayerDeath);
+				});
+				return gameWorld;
 			});
 		});
 	}
@@ -73,12 +74,12 @@ public class CreativePartyWaiting {
 
 	private StartResult requestStart() {
 		if (this.gameWorld.getPlayerCount() < this.config.players.getMinPlayers()) {
-			return StartResult.notEnoughPlayers();
+			return StartResult.NOT_ENOUGH_PLAYERS;
 		}
 
 		CreativePartyActive.open(this.gameWorld, this.map, this.config);
 
-		return StartResult.ok();
+		return StartResult.OK;
 	}
 
 	private void addPlayer(ServerPlayerEntity player) {
