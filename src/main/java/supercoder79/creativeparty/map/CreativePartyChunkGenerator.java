@@ -14,11 +14,15 @@ import net.minecraft.world.biome.BuiltinBiomes;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
 
 public class CreativePartyChunkGenerator extends GameChunkGenerator {
 
-	public CreativePartyChunkGenerator(MinecraftServer server) {
+	private final ConfiguredSurfaceBuilder<?> surfaceBuilder;
+
+	public CreativePartyChunkGenerator(MinecraftServer server, ConfiguredSurfaceBuilder<?> surfaceBuilder) {
 		super(server);
+		this.surfaceBuilder = surfaceBuilder;
 	}
 
 	private static final BlockState STONE = Blocks.STONE.getDefaultState();
@@ -56,7 +60,9 @@ public class CreativePartyChunkGenerator extends GameChunkGenerator {
 				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z) + 1;
 
 				mutablePos.set(minWorldX + x, height, minWorldZ + z);
-				BuiltinBiomes.PLAINS.buildSurface(chunkRandom, chunk, worldX, worldZ, height, 0.0, STONE, WATER, 0, seed);
+
+				this.surfaceBuilder.initSeed(seed);
+				this.surfaceBuilder.generate(chunkRandom, chunk, BuiltinBiomes.PLAINS, worldX, worldZ, height, 0.0, STONE, WATER, 0, seed);
 			}
 		}
 	}
