@@ -11,6 +11,7 @@ public class CreativeParty implements ModInitializer {
 	public static final String ID = "creative_party";
 
 	public static final GameRule DISABLE_EXPLOSION = new GameRule();
+	public static final GameRule DISABLE_POTIONS = new GameRule();
 
 	@Override
 	public void onInitialize() {
