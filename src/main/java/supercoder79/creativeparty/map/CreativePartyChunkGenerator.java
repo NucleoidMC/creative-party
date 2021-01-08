@@ -20,13 +20,14 @@ public class CreativePartyChunkGenerator extends GameChunkGenerator {
 
 	private final ConfiguredSurfaceBuilder<?> surfaceBuilder;
 
+	private static final BlockState STONE = Blocks.STONE.getDefaultState();
+	private static final BlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+	private static final BlockState WATER = Blocks.WATER.getDefaultState();
+
 	public CreativePartyChunkGenerator(MinecraftServer server, ConfiguredSurfaceBuilder<?> surfaceBuilder) {
 		super(server);
 		this.surfaceBuilder = surfaceBuilder;
 	}
-
-	private static final BlockState STONE = Blocks.STONE.getDefaultState();
-	private static final BlockState WATER = Blocks.WATER.getDefaultState();
 
 	@Override
 	public void populateNoise(WorldAccess world, StructureAccessor structures, Chunk chunk) {
@@ -35,7 +36,12 @@ public class CreativePartyChunkGenerator extends GameChunkGenerator {
 		for (int x = 0; x < 16; x++) {
 		    for (int z = 0; z < 16; z++) {
 				for (int y = 0; y < 60; y++) {
-					chunk.setBlockState(mutable.set(x, y, z), STONE, false);
+
+					if (y == 0) {
+						chunk.setBlockState(mutable.set(x, y, z), BEDROCK, false);
+					} else {
+						chunk.setBlockState(mutable.set(x, y, z), STONE, false);
+					}
 				}
 		    }
 		}
@@ -51,15 +57,12 @@ public class CreativePartyChunkGenerator extends GameChunkGenerator {
 
 		int minWorldX = chunkPos.getStartX();
 		int minWorldZ = chunkPos.getStartZ();
-		BlockPos.Mutable mutablePos = new BlockPos.Mutable();
 
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				int worldX = minWorldX + x;
 				int worldZ = minWorldZ + z;
 				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z) + 1;
-
-				mutablePos.set(minWorldX + x, height, minWorldZ + z);
 
 				this.surfaceBuilder.initSeed(seed);
 				this.surfaceBuilder.generate(chunkRandom, chunk, BuiltinBiomes.PLAINS, worldX, worldZ, height, 0.0, STONE, WATER, 0, seed);
