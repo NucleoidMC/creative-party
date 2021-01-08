@@ -1,6 +1,7 @@
 package supercoder79.creativeparty;
 
 import xyz.nucleoid.plasmid.game.GameType;
+import xyz.nucleoid.plasmid.game.rule.GameRule;
 
 import net.minecraft.util.Identifier;
 
@@ -8,6 +9,8 @@ import net.fabricmc.api.ModInitializer;
 
 public class CreativeParty implements ModInitializer {
 	public static final String ID = "creative_party";
+
+	public static final GameRule DISABLE_EXPLOSION = new GameRule();
 
 	@Override
 	public void onInitialize() {

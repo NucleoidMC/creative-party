@@ -4,6 +4,7 @@
   "package": "supercoder79.creativeparty.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinExplosion"
   ],
   "client": [
   ],

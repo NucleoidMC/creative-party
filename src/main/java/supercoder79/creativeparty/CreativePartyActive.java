@@ -43,6 +43,7 @@ public class CreativePartyActive {
 			game.setRule(GameRule.BLOCK_DROPS, RuleResult.DENY);
 			game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
 			game.setRule(GameRule.HUNGER, RuleResult.DENY);
+			game.setRule(CreativeParty.DISABLE_EXPLOSION, RuleResult.ALLOW);
 
 			game.on(GameOpenListener.EVENT, active::onOpen);
 
