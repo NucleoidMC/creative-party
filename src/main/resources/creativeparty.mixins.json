@@ -6,7 +6,9 @@
   "mixins": [
     "MixinExplosion",
     "MixinFallingBlock",
-    "MixinThrowablePotionItem"
+    "MixinSummonCommand",
+    "MixinThrowablePotionItem",
+    "MixinWitherSkullBlock"
   ],
   "client": [
   ],
