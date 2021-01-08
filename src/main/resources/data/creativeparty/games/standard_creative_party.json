@@ -1,6 +1,7 @@
 {
   "type": "creative_party:creative_party",
   "name": "Creative Party",
+  "map": {},
   "players": {
     "min": 1,
     "max": 100
