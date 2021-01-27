@@ -46,6 +46,6 @@ public class CreativePartyChunkGenerator extends GameChunkGenerator {
 
 	@Override
 	public void carve(long seed, BiomeAccess access, Chunk chunk, GenerationStep.Carver carver) {
-		
+
 	}
 }
