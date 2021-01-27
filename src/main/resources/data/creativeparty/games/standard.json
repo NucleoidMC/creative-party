@@ -1,7 +1,12 @@
 {
   "type": "creative_party:creative_party",
   "name": "Creative Party",
-  "map": {},
+  "map": {
+    "map_type": {
+      "type": "creative_party:default",
+      "biome": "minecraft:plains"
+    }
+  },
   "players": {
     "min": 1,
     "max": 100

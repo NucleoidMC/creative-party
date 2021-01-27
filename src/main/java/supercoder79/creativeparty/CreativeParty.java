@@ -1,5 +1,6 @@
 package supercoder79.creativeparty;
 
+import supercoder79.creativeparty.map.type.MapTypes;
 import xyz.nucleoid.plasmid.game.GameType;
 import xyz.nucleoid.plasmid.game.rule.GameRule;
 
@@ -18,6 +19,8 @@ public class CreativeParty implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		MapTypes.init();
+
 		GameType.register(
 				new Identifier(ID, "creative_party"),
 				CreativePartyWaiting::open,

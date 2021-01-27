@@ -1,72 +1,51 @@
 package supercoder79.creativeparty.map;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import supercoder79.creativeparty.map.type.MapType;
 import xyz.nucleoid.plasmid.game.world.generator.GameChunkGenerator;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.registry.DynamicRegistryManager;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.ChunkRegion;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.biome.BuiltinBiomes;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeAccess;
+import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkRandom;
+import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
+import net.minecraft.world.gen.chunk.StructuresConfig;
 
 public class CreativePartyChunkGenerator extends GameChunkGenerator {
 
-	private final ConfiguredSurfaceBuilder<?> surfaceBuilder;
+	private final MapType type;
 
-	private static final BlockState STONE = Blocks.STONE.getDefaultState();
-	private static final BlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
-	private static final BlockState WATER = Blocks.WATER.getDefaultState();
+	public CreativePartyChunkGenerator(MinecraftServer server, MapType type) {
+		super(createBiomeSource(server, RegistryKey.of(Registry.BIOME_KEY, type.biomeId())), new StructuresConfig(Optional.empty(), Collections.emptyMap()));
+		this.type = type;
+	}
 
-	public CreativePartyChunkGenerator(MinecraftServer server, ConfiguredSurfaceBuilder<?> surfaceBuilder) {
-		super(server);
-		this.surfaceBuilder = surfaceBuilder;
+	protected static FixedBiomeSource createBiomeSource(MinecraftServer server, RegistryKey<Biome> biome) {
+		DynamicRegistryManager registryManager = server.getRegistryManager();
+		return new FixedBiomeSource((Biome)registryManager.get(Registry.BIOME_KEY).get(biome));
 	}
 
 	@Override
 	public void populateNoise(WorldAccess world, StructureAccessor structures, Chunk chunk) {
-		BlockPos.Mutable mutable = new BlockPos.Mutable();
-
-		for (int x = 0; x < 16; x++) {
-		    for (int z = 0; z < 16; z++) {
-				for (int y = 0; y < 60; y++) {
-
-					if (y == 0) {
-						chunk.setBlockState(mutable.set(x, y, z), BEDROCK, false);
-					} else {
-						chunk.setBlockState(mutable.set(x, y, z), STONE, false);
-					}
-				}
-		    }
-		}
+		this.type.populateNoise((ChunkRegion) world, chunk);
 	}
 
 	@Override
 	public void buildSurface(ChunkRegion region, Chunk chunk) {
-		ChunkPos chunkPos = chunk.getPos();
+		this.type.buildSurface(region, chunk);
+	}
 
-		ChunkRandom chunkRandom = new ChunkRandom();
-		chunkRandom.setTerrainSeed(chunkPos.x, chunkPos.z);
-		long seed = region.getSeed();
-
-		int minWorldX = chunkPos.getStartX();
-		int minWorldZ = chunkPos.getStartZ();
-
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
-				int worldX = minWorldX + x;
-				int worldZ = minWorldZ + z;
-				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z) + 1;
-
-				this.surfaceBuilder.initSeed(seed);
-				this.surfaceBuilder.generate(chunkRandom, chunk, BuiltinBiomes.PLAINS, worldX, worldZ, height, 0.0, STONE, WATER, 0, seed);
-			}
-		}
+	@Override
+	public void carve(long seed, BiomeAccess access, Chunk chunk, GenerationStep.Carver carver) {
+		
 	}
 }

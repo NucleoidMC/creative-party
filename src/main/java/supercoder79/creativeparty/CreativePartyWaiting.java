@@ -36,7 +36,7 @@ public class CreativePartyWaiting {
 
 		CreativePartyMap map = generator.build();
 		BubbleWorldConfig worldConfig = new BubbleWorldConfig()
-				.setGenerator(map.chunkGenerator(context.getServer(), context.getConfig().map.surfaceBuilder))
+				.setGenerator(map.chunkGenerator(context.getServer(), context.getConfig().map.mapType))
 				.setDefaultGameMode(GameMode.SPECTATOR);
 
 		return context.createOpenProcedure(worldConfig, game -> {
