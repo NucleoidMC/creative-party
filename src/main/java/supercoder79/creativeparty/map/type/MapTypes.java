@@ -8,6 +8,7 @@ public class MapTypes {
 	public static void init() {
 		register("default", DefaultMapType.CODEC);
 		register("layered", LayeredMapType.CODEC);
+		register("template", TemplateMapType.CODEC);
 	}
 
 	private static void register(String identifier, Codec<? extends MapType> type) {
