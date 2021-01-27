@@ -14,6 +14,7 @@ public class CreativeParty implements ModInitializer {
 	public static final GameRule DISABLE_POTIONS = new GameRule();
 	public static final GameRule DISABLE_FALLING_BLOCKS = new GameRule();
 	public static final GameRule DISABLE_BOSSES = new GameRule();
+	public static final GameRule DISABLE_EGGS = new GameRule();
 
 	@Override
 	public void onInitialize() {
