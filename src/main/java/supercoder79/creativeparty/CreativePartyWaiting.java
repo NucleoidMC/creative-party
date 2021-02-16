@@ -92,7 +92,7 @@ public class CreativePartyWaiting {
 		player.setHealth(20.0F);
 		player.getHungerManager().setFoodLevel(20);
 		player.fallDistance = 0.0F;
-		player.setGameMode(GameMode.SPECTATOR);
+		player.setGameMode(GameMode.CREATIVE);
 
 		ServerWorld world = this.gameSpace.getWorld();
 		int y = world.getTopY(Heightmap.Type.WORLD_SURFACE, 0, 0);
