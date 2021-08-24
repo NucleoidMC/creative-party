@@ -73,6 +73,6 @@ public class CreativePartyActive {
 		player.setGameMode(GameMode.CREATIVE);
 
 		ServerWorld world = this.gameSpace.getWorld();
-		player.teleport(world, 0, this.config.map.mapType.getSpawnY(), 0, 0.0F, 0.0F);
+		player.teleport(world, 0, this.config.map.mapType.getSpawnY(world), 0, 0.0F, 0.0F);
 	}
 }

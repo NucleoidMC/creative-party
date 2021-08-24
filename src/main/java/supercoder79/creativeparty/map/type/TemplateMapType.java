@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import xyz.nucleoid.plasmid.game.GameOpenException;
 import xyz.nucleoid.plasmid.game.world.view.VoidBlockView;
@@ -70,7 +71,7 @@ public class TemplateMapType implements MapType {
 	}
 	
 	@Override
-	public double getSpawnY() {
+	public double getSpawnY(World world) {
 		this.ensureMapTemplate();
 		return this.mapTemplate.getBounds().getMax().getY();
 	}

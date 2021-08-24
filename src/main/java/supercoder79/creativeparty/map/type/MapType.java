@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 public interface MapType {
@@ -34,8 +35,8 @@ public interface MapType {
 		return VoidBlockView.INSTANCE;
 	}
 
-	default double getSpawnY() {
-		return 62;
+	default double getSpawnY(World world) {
+		return world.getTopY(Heightmap.Type.WORLD_SURFACE, 0, 0);
 	}
 
 	Identifier biomeId();
