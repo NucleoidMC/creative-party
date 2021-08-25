@@ -6,6 +6,7 @@
   "mixins": [
     "MixinExplosion",
     "MixinFallingBlock",
+    "MixinServerWorld",
     "MixinSpawnEggItem",
     "MixinSummonCommand",
     "MixinThrowablePotionItem",
