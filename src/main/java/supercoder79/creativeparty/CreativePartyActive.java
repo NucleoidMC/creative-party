@@ -3,8 +3,6 @@ package supercoder79.creativeparty;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.GameMode;
-import net.minecraft.world.Heightmap;
-
 import supercoder79.creativeparty.map.CreativePartyMap;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.GameOpenListener;
@@ -75,7 +73,6 @@ public class CreativePartyActive {
 		player.setGameMode(GameMode.CREATIVE);
 
 		ServerWorld world = this.gameSpace.getWorld();
-		int y = world.getTopY(Heightmap.Type.WORLD_SURFACE, 0, 0);
-		player.teleport(world, 0, y, 0, 0.0F, 0.0F);
+		player.teleport(world, 0, this.config.map.mapType.getSpawnY(world), 0, 0.0F, 0.0F);
 	}
 }

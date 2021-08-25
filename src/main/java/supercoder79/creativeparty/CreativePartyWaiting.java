@@ -5,8 +5,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.GameMode;
-import net.minecraft.world.Heightmap;
-
 import supercoder79.creativeparty.map.CreativePartyMap;
 import supercoder79.creativeparty.map.CreativePartyMapGenerator;
 import xyz.nucleoid.fantasy.BubbleWorldConfig;
@@ -95,7 +93,6 @@ public class CreativePartyWaiting {
 		player.setGameMode(GameMode.SPECTATOR);
 
 		ServerWorld world = this.gameSpace.getWorld();
-		int y = world.getTopY(Heightmap.Type.WORLD_SURFACE, 0, 0);
-		player.teleport(world, 0, y, 0, 0.0F, 0.0F);
+		player.teleport(world, 0, this.config.map.mapType.getSpawnY(world), 0, 0.0F, 0.0F);
 	}
 }
