@@ -18,7 +18,6 @@ import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
 import xyz.nucleoid.plasmid.game.event.RequestStartListener;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
 import xyz.nucleoid.plasmid.game.rule.GameRule;
-import xyz.nucleoid.plasmid.game.rule.RuleResult;
 
 public class CreativePartyWaiting {
 	private final GameSpace gameSpace;
@@ -40,19 +39,19 @@ public class CreativePartyWaiting {
 				.setDefaultGameMode(GameMode.SPECTATOR);
 
 		return context.createOpenProcedure(worldConfig, game -> {
-			CreativePartyWaiting waiting = new CreativePartyWaiting(game.getSpace(), map, context.getConfig());
+			CreativePartyWaiting waiting = new CreativePartyWaiting(game.getGameSpace(), map, context.getConfig());
 
-			game.setRule(GameRule.CRAFTING, RuleResult.DENY);
-			game.setRule(GameRule.PORTALS, RuleResult.DENY);
-			game.setRule(GameRule.PVP, RuleResult.DENY);
-			game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
-			game.setRule(GameRule.HUNGER, RuleResult.DENY);
+			game.deny(GameRule.CRAFTING);
+			game.deny(GameRule.PORTALS);
+			game.deny(GameRule.PVP);
+			game.deny(GameRule.FALL_DAMAGE);
+			game.deny(GameRule.HUNGER);
 
-			game.on(RequestStartListener.EVENT, waiting::requestStart);
-			game.on(OfferPlayerListener.EVENT, waiting::offerPlayer);
+			game.listen(RequestStartListener.EVENT, waiting::requestStart);
+			game.listen(OfferPlayerListener.EVENT, waiting::offerPlayer);
 
-			game.on(PlayerAddListener.EVENT, waiting::addPlayer);
-			game.on(PlayerDeathListener.EVENT, waiting::onPlayerDeath);
+			game.listen(PlayerAddListener.EVENT, waiting::addPlayer);
+			game.listen(PlayerDeathListener.EVENT, waiting::onPlayerDeath);
 		});
 	}
 

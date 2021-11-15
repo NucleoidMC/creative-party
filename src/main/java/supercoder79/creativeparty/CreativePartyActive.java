@@ -10,7 +10,6 @@ import xyz.nucleoid.plasmid.game.event.OfferPlayerListener;
 import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
 import xyz.nucleoid.plasmid.game.rule.GameRule;
-import xyz.nucleoid.plasmid.game.rule.RuleResult;
 import xyz.nucleoid.plasmid.util.PlayerRef;
 
 import java.util.Set;
@@ -37,22 +36,22 @@ public class CreativePartyActive {
 					.collect(Collectors.toSet());
 
 			CreativePartyActive active = new CreativePartyActive(gameSpace, map, config, participants);
-			game.setRule(GameRule.CRAFTING, RuleResult.DENY);
-			game.setRule(GameRule.PORTALS, RuleResult.DENY);
-			game.setRule(GameRule.PVP, RuleResult.DENY);
-			game.setRule(GameRule.BLOCK_DROPS, RuleResult.DENY);
-			game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
-			game.setRule(GameRule.HUNGER, RuleResult.DENY);
-			game.setRule(CreativeParty.DISABLE_EXPLOSION, RuleResult.ALLOW);
-			game.setRule(CreativeParty.DISABLE_POTIONS, RuleResult.ALLOW);
-			game.setRule(CreativeParty.DISABLE_FALLING_BLOCKS, RuleResult.ALLOW);
-			game.setRule(CreativeParty.DISABLE_BOSSES, RuleResult.ALLOW);
-			game.setRule(CreativeParty.DISABLE_EGGS, RuleResult.ALLOW);
+			game.deny(GameRule.CRAFTING);
+			game.deny(GameRule.PORTALS);
+			game.deny(GameRule.PVP);
+			game.deny(GameRule.BLOCK_DROPS);
+			game.deny(GameRule.FALL_DAMAGE);
+			game.deny(GameRule.HUNGER);
+			game.allow(CreativeParty.DISABLE_EXPLOSION);
+			game.allow(CreativeParty.DISABLE_POTIONS);
+			game.allow(CreativeParty.DISABLE_FALLING_BLOCKS);
+			game.allow(CreativeParty.DISABLE_BOSSES);
+			game.allow(CreativeParty.DISABLE_EGGS);
 
-			game.on(GameOpenListener.EVENT, active::onOpen);
+			game.listen(GameOpenListener.EVENT, active::onOpen);
 
-			game.on(OfferPlayerListener.EVENT, player -> JoinResult.ok());
-			game.on(PlayerAddListener.EVENT, active::addPlayer);
+			game.listen(OfferPlayerListener.EVENT, player -> JoinResult.ok());
+			game.listen(PlayerAddListener.EVENT, active::addPlayer);
 		});
 	}
 
