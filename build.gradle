@@ -12,7 +12,7 @@ group = project.maven_group
 
 repositories {
     maven { url = "https://jitpack.io/" }
-    maven { url = "https://maven.gegy.dev/" }
+    maven { url = "https://maven.nucleoid.xyz/" }
     mavenLocal()
 }
 
@@ -25,7 +25,7 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation 'xyz.nucleoid:plasmid:0.4.1'
+    modImplementation 'xyz.nucleoid:plasmid:0.4.162'
 
     modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
         exclude module : "fabric-loader"
